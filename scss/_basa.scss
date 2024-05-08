@@ -1,0 +1,133 @@
+@use 'sass:math';
+
+
+
+$fontFamily: "Heebo", sans-serif;
+$fontSize: toRem(16); // где 18(px) - размер шрифта по умолчанию из макета
+
+// Основные цвета
+$mainColor: #F2F2F2; // Цвет шрифта по умолчанию
+$borderColor: #004d73; //колір обводки
+$textColor :#00c16e;  //колір букв 
+$bgColor: #008c93; //колір фона
+$gradient:linear-gradient(170deg, rgba(0,77,115,1) 48%, rgba(0,140,147,1) 79%);
+$shadow: 0 0 toRem(10) rgba(0, 0, 0, 0.4);
+$border: .125rem solid #008c93;
+
+
+// Настройки адаптивной сетки ===============================================================================================================================================================================================================================================================================================
+
+// Минимальная ширина страницы
+$minWidth: 320;
+// Ширина полотна (макета)
+$maxWidth: 1920;
+// Ширина ограничивающего контейнера (0 = нет ограничения)
+$maxWidthContainer: 1320;
+// Общий отступ у контейнера
+// (30 = по 15px слева и справа, 0 = нет отступа)
+$containerPadding: 30;
+
+// Ширина срабатывания первого брейкпоинта
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Брейк-поинты
+$pc: toEm($containerWidth); // ПК, ноутбуки, некоторые планшеты в горизонтальном положении
+$tablet: toEm(991.98); // Планшеты, некоторые телефоны в горизонтальном положении
+$mobile: toEm(767.98); // Телефоны L
+$mobileSmall: toEm(479.98); // Телефоны S
+
+
+// базові налаштування
+body {
+	font-family: $fontFamily;
+	font-size: $fontSize;
+	background-color: $borderColor;
+	
+}
+
+
+.wrapper {
+    min-height: 100%;
+    overflow: clip;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper>main {
+    flex-grow: 1;
+}
+
+[class*=__container] {
+    max-width: toRem($containerWidth);
+	margin: 0 auto;
+    padding: 0px math.div($containerPadding , 2) + px;
+}
+
+
+
+// обнулення стилів
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	box-sizing: border-box;
+}
+*::before,
+*::after {
+	display: inline-block;
+}
+a {
+	display: inline-block;
+	text-decoration: none;
+	color: inherit;
+}
+li {
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: inherit;
+	font-size: inherit;
+}
+html,
+body {
+	line-height: 1;
+	height: 100%;
+}
+
+
+/* form */
+input,
+button,
+textarea {
+	font-family: inherit;
+	font-size: inherit;
+}
+textarea {
+	line-height: inherit;
+	resize: vertical;
+}
+
+a,
+button,
+select,
+option {
+	cursor: pointer;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+	appearance: none;
+
+}

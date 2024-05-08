@@ -1,0 +1,261 @@
+.social {
+    &__items {
+        display: flex;
+        justify-content: center;
+        gap: toRem(10);
+        padding: toRem(10);
+    }
+
+    &__item {
+    }
+
+    &__link {
+        color: #fff;
+        padding: toRem(8);
+        font-size: 0;
+        aspect-ratio: 1 / 1;
+        border-radius: toRem(10);
+        transition: background-color 0.3s ease 0s;
+        &::before {
+            font-size: toRem(25);
+            transform: translate(
+                toRem(-1), toRem(1));
+        }
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: $bgColor;
+            }
+        }
+    }
+}
+
+.social-popup {
+    &__items {
+        display: flex;
+        justify-content: center;
+        gap: toRem(10);
+        padding: toRem(10);
+        flex-wrap: wrap;
+    }
+
+    &__item {
+    }
+
+    &__link {
+        display: grid;
+        justify-content: center;
+        gap: toRem(10);
+        color: #fff;
+        padding: toRem(8) toRem(30);
+        border-radius: toRem(10);
+        transition: background-color 0.3s ease 0s;
+        &::before {
+            font-size: toRem(30);
+            text-align: center;
+        }
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: $borderColor;
+            }
+        }
+        @media (max-width: $mobile) {
+            padding: toRem(8) toRem(10);
+        }
+    }
+}
+
+.info {
+    &__items {
+        display: grid;
+
+        @media (min-width: toEm(576)) {
+            grid-template-columns: repeat(2, 1fr);
+            margin: toRem(-4) toRem(-12);
+        }
+    }
+
+    &__item {
+        color: $textColor;
+
+        font-weight: 500;
+        line-height: 1.5; /* 24/16 */
+
+        & a,
+        & span {
+            padding-left: toRem(7);
+            color: $mainColor;
+        }
+        & a {
+            text-decoration: underline;
+            @media (any-hover: hover) {
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
+        @media (min-width: toEm(576)) {
+            padding: toRem(4) toRem(12);
+        }
+    }
+}
+
+.action {
+    display: flex;
+    flex-wrap: wrap;
+
+    &__button {
+    }
+}
+.button {
+    font-family: 'Ahsing';
+    letter-spacing: toEm(5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    flex: 1 1 auto;
+    background-color: transparent;
+    transition: background-color 0.3s ease 0s;
+    border: toRem(1) solid $bgColor;
+    padding: toRem(10);
+    @media (any-hover: hover) {
+        &:hover {
+            background-color: $bgColor;
+        }
+    }
+}
+
+.title {
+    font-family: 'Ahsing';
+    letter-spacing: toEm(5,40);
+    color: $mainColor;
+    @include adaptiveValue("font-size", 40, 28);
+    font-weight: 600;
+    line-height: 1.2; /* 48/40 */
+    position: relative;
+    padding-bottom: toEm(25, 40);
+
+    &--sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        background-color: $borderColor;
+    }
+    &::after {
+        content: "";
+        width: toRem(10);
+        height: toRem(10);
+        position: absolute;
+        bottom: 0;
+        transform: translateY(-50%);
+        left: 0;
+        border: toRem(2) solid;
+        border-radius: 50%;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: toRem(9);
+        left: toRem(20);
+        width: toEm(50, 40);
+        height: toRem(2);
+        background-color: $mainColor;
+    }
+}
+
+.text {
+   
+    color: #eee;
+    font-weight: 400;
+    line-height: 1.5;
+    & p {
+        &:not(:last-child) {
+            margin-bottom: toRem(7);
+        }
+    }
+}
+//========================================================================================================================================================
+// cursor
+
+
+
+.fls-cursor {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+    z-index: 100;
+	&__shadow {
+		will-change: transform;
+		transition: all 0.05s linear 0s;
+		position: fixed;
+		width: toRem(150);
+		height: toRem(150);
+        opacity: .2;
+        filter: blur(50px);
+        background-color: transparent;
+        border-radius: 50%;
+        background-color: $textColor;
+       
+        
+		&::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+            border-radius: 50%;
+			top: 0;
+			left: 0;
+            box-shadow: 0 0 50px $textColor;
+            opacity: 1;
+			
+			animation: rotate 5s infinite linear;
+			@keyframes rotate {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(-360deg);
+				}
+			}
+		}
+	}
+	&__pointer {
+		position: fixed;
+		width: toRem(3);
+		height: toRem(3);
+		top: 0;
+		left: 0;
+		&::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			border: 3px solid $borderColor;
+			transition: all 0.3s ease 0s;
+			border-radius: 50%;
+		}
+	}
+	&._hover {
+		.fls-cursor__pointer::after {
+			transform: scale(0.8);
+		}
+		.fls-cursor__shadow::after {
+		}
+	}
+	&._active {
+		.fls-cursor__pointer::after {
+			transition: all 0.05s ease 0s;
+			transform: scale(0.3);
+		}
+		.fls-cursor__shadow::after {
+		}
+	}
+}
+//========================================================================================================================================================

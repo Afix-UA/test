@@ -1,0 +1,161 @@
+
+@use 'sass:math';
+
+
+@function toRem($px) {
+    $result: math.div($px, 16) + rem;
+    @return $result;
+}
+
+//EM
+@function toEm($px, $current: 16) {
+	$result: math.div($px, $current) + em;
+	@return $result;
+}
+
+
+// Адаптивное свойство (clamp)
+@mixin adaptiveValue($property, $startSize, $minSize, $keepSize: 0, $widthFrom: $containerWidth, $widthTo: $minWidth) {
+	@if ($startSize==0) {
+		$startSize: 0.000001;
+	}
+	@if ($minSize==0) {
+		$minSize: 0.000001;
+	}
+
+	// Для calc();
+	$addSize: math.div($startSize - $minSize, 16);
+
+	@if ($widthFrom == $containerWidth and $maxWidthContainer == 0) {
+		$widthFrom: $maxWidth;
+	}
+
+	// Брейк-поинты в EM
+	$widthFromMedia: toEm($widthFrom);
+	$widthToMedia: toEm($widthTo);
+
+	// Формула плавающего значения
+	// Источник: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/
+	$slope: math.div(($startSize - $minSize), ($widthFrom - $widthTo));
+	$yIntersection: -$widthTo * $slope + $minSize;
+	@if ($yIntersection==0) {
+		$yIntersection: 0.000001;
+	}
+	$flyValue: #{ toRem($yIntersection)}" + " #{$slope * 100}vw;
+
+	// Получение значения свойства
+	$propertyValue: #{"clamp("  toRem($minSize) "," $flyValue ","  toRem($startSize) ")"};
+	// Если отрицательные значения
+	@if ($minSize > $startSize) {
+		$propertyValue: #{"clamp("  toRem($startSize) "," $flyValue ","  toRem($minSize) ")"};
+	}
+
+	// Устанавливаем значения по умолчанию
+	@if $keepSize != 1 and $keepSize != 3 {
+		@media (min-width: $widthFromMedia) {
+			#{$property}:  toRem($startSize);
+		}
+	}
+	// Адаптируем размер в промежутке между указанными ширинами вьюпорта
+	@media (min-width: $widthToMedia) and (max-width: $widthFromMedia) {
+		// Если поддерживается clamp();
+		@supports (#{$property}: $propertyValue) {
+			#{$property}: $propertyValue;
+		}
+		// Если не поддерживается clamp();
+		@supports not (#{$property}: $propertyValue) {
+			#{$property}: calc(#{ toRem($minSize)} + #{$addSize} * (100vw - #{ toRem($widthTo)}) / #{math.div($widthFrom, 16) - math.div($widthTo, 16)});
+		}
+	}
+	@if $keepSize != 1 and $keepSize != 2 {
+		@media (max-width: $widthToMedia) {
+			#{$property}:  toRem($minSize);
+		}
+	}
+}
+
+// flexCard
+@mixin flexCards($col: 5, $gap: toRem(30),$minWidth: toRem(380),$maxWidth: toRem(300), $flexWrap: wrap) {
+    display: flex;
+    @if ($flexWrap != nowrap) {
+        flex-wrap: $flexWrap;
+    }
+    gap: $gap;
+    & > * {
+        @if ( $minWidth != "") {
+            min-width: $minWidth;
+        }
+        flex: 1 1 calc( (100% - ( $gap * (#{$col} - 1))) / #{$col});
+        max-width: $maxWidth;
+    }
+}
+
+// Grids
+@mixin gridCards($type: fit, $min: 280px, $max: 1fr, $gap: 30px) {
+	display: grid;
+    
+	gap: $gap;
+	grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));
+}
+
+// Adeptive-images
+@mixin adeptiveImages($width: 0, $height: 0,$objectPosition: center, $obFit: cover) {
+    width: 100%;
+    height: 100%;
+    object-fit: $obFit;
+    object-position: $objectPosition;
+
+    @if ( $width != 0 and $height != 0) {
+        aspect-ratio: $width #{'/'} $height;
+    }
+   
+    
+}
+
+
+// borders of the container
+@mixin bordersOfTheContainer($contentParcent: 50, $imagesParcent: 50, $ASwidth: 1, $AShight: 1,$objectPositionIMG: center ,$obFitIMG: cover) {
+    
+    overflow: hidden;
+
+    @media (min-width:$mobile) {
+        display: flex;
+		
+
+    }
+
+    & > [class*=__content] {
+        flex: 0 0 100%;
+        [class*=__body] {    
+            @media (min-width:$mobile) {
+                width: $contentParcent * 1%;
+    
+            }
+        }
+
+    }
+
+    & > [class*=__images] {
+        
+        img {
+            @include adeptiveImages($width: $ASwidth, $height: $AShight, $objectPosition: $objectPositionIMG, $obFit: $obFitIMG);
+
+        }
+
+        @media (min-width:$mobile) {
+            $widthParcentimages: math.div($imagesParcent , 100);
+            
+            $containerPaddingPX:  toRem($containerPadding);
+            flex: 0 0 calc(((100vw - $containerPaddingPX) *$widthParcentimages) + ($containerPaddingPX / 2));
+            transform: translate(-100%, 0);
+
+        }
+
+        @media (min-width:$containerWidth) {
+            $widthParcentcontent: math.div($contentParcent , 100);
+			$maxWidthContainerPX: $maxWidthContainer + px;
+            flex: 0 0 calc(((50vw - ($widthParcentcontent - 0.5) * $maxWidthContainerPX)));
+        }
+    }
+    
+}

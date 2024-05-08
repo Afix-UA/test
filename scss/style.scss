@@ -1,0 +1,84 @@
+
+// iconsFont
+@import "icons-font";
+
+@import "_mixins.scss";
+@import "_basa.scss";
+@import "_fonts.scss";
+
+
+
+// // підключення стилів 
+@import "_comand.scss";
+@import "_page";
+@import "_popup";
+
+
+body::-webkit-scrollbar {
+    width: toRem(14);
+
+    border:toRem(1) solid $bgColor;
+    
+}
+body::-webkit-scrollbar-thumb {
+    background-color:$textColor;
+    border-radius: toRem(2);    
+}
+
+
+[class*=__container] {
+    
+        @media (min-width:toEm(768)){
+            display: flex;
+        }
+}
+//  =========Page==========
+.page {
+
+    &__bio {}
+
+    &__content {
+        @include adaptiveValue("padding-top", 48, 28);
+        @include adaptiveValue("padding-left",48,0,0, $containerWidth, 568 );
+        @include adaptiveValue("padding-right",48,0,0, $containerWidth, 568 );
+    }
+}
+
+
+.content {
+
+    &__about,
+    &__skills,
+    &__portfolio {
+        position: relative;
+        opacity: 0;
+        transition: all 0.8s ease .3s;
+            @include adaptiveValue("margin-bottom", 48, 28);
+            &:not(:last-child) {
+                @include adaptiveValue("padding-bottom", 48,28);
+                border-bottom:toRem(1) solid rgba(255,255,255,0.1) ;
+                transform: translatex(toRem(20));
+               
+            }
+            &._watcher-view {
+                transform: translateX(toRem(0));
+                opacity: 1;
+            }
+    }
+    &__skills { 
+    }
+
+    &__expericence {
+        @include adaptiveValue("margin-bottom", 48, 28);
+        &:not(:last-child) {
+            @include adaptiveValue("padding-bottom", 48,28);
+            border-bottom:toRem(1) solid rgba(255,255,255,0.1); 
+        }
+    }
+    &__portfolio {
+    }
+    &__copi {
+    }
+
+}
+
